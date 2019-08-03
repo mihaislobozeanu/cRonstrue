@@ -11,6 +11,7 @@ export class ExpressionDescriptor {
 
   expression: string;
   expressionParts: string[];
+  parsedExpression: any;
   options: Options;
   i18n: Locale;
 
@@ -53,6 +54,47 @@ export class ExpressionDescriptor {
     return descripter.getFullDescription();
   }
 
+  /**
+   * Parses a cron expression
+   * @static
+   * @param {string} expression - The cron expression
+   * @param {IOptions} [{
+   *         throwExceptionOnParseError = true,
+   *         casingType = CasingTypeEnum.Sentence,
+   *         verbose = false,
+   *         dayOfWeekStartIndexZero = true,
+   *         use24HourTimeFormat = false,
+   *         locale = 'en'
+   *     }={}]
+   * @returns {string}
+   */
+  static parse(
+    expression: string,
+    {
+      throwExceptionOnParseError = true,
+      verbose = false,
+      dayOfWeekStartIndexZero = true,
+      use24HourTimeFormat,
+      locale = "en"
+    }: Options = {}
+  ): { description: string, parsed: any } {
+    // We take advantage of Destructuring Object Parameters (and defaults) in TS/ES6 and now we will reassemble back to
+    // an Options type so we can pass around options with ease.
+
+    let options = <Options>{
+      throwExceptionOnParseError: throwExceptionOnParseError,
+      verbose: verbose,
+      dayOfWeekStartIndexZero: dayOfWeekStartIndexZero,
+      use24HourTimeFormat: use24HourTimeFormat,
+      locale: locale
+    };
+
+    let descripter = new ExpressionDescriptor(expression, options);
+    let description = descripter.getFullDescription();
+    return { description, parsed: descripter.parsedExpression };
+  }
+
+
   static initialize(localesLoader: LocaleLoader) {
     ExpressionDescriptor.specialCharacters = ["/", "-", ",", "*"];
 
@@ -64,6 +106,7 @@ export class ExpressionDescriptor {
     this.expression = expression;
     this.options = options;
     this.expressionParts = new Array(5);
+    this.parsedExpression = {};
 
     if (ExpressionDescriptor.locales[options.locale]) {
       this.i18n = ExpressionDescriptor.locales[options.locale];
@@ -109,8 +152,11 @@ export class ExpressionDescriptor {
 
   protected getTimeOfDayDescription() {
     let secondsExpression: string = this.expressionParts[0];
+    const secondsParsedExpr: any = this.parsedExpression["seconds"] = {};
     let minuteExpression: string = this.expressionParts[1];
+    const minutesParsedExpr: any = this.parsedExpression["minutes"] = {};
     let hourExpression: string = this.expressionParts[2];
+    const hoursParsedExpr: any = this.parsedExpression["hours"] = {};
 
     let description = "";
 
@@ -121,6 +167,17 @@ export class ExpressionDescriptor {
       !StringUtilities.containsAny(secondsExpression, ExpressionDescriptor.specialCharacters)
     ) {
       //specific time of day (i.e. 10 14)
+      if (secondsExpression) {
+        secondsParsedExpr.type = 'specific';
+        secondsParsedExpr.value = [parseInt(secondsExpression)];
+      } else {
+        secondsParsedExpr.type = 'none';
+      }
+      minutesParsedExpr.type = 'specific';
+      minutesParsedExpr.value = [parseInt(minuteExpression)];
+      hoursParsedExpr.type = 'specific';
+      hoursParsedExpr.value = [parseInt(hourExpression)];
+
       description += this.i18n.atSpace() + this.formatTime(hourExpression, minuteExpression, secondsExpression);
     } else if (
       !secondsExpression &&
@@ -131,6 +188,15 @@ export class ExpressionDescriptor {
     ) {
       //minute range in single hour (i.e. 0-10 11)
       let minuteParts: string[] = minuteExpression.split("-");
+
+      secondsParsedExpr.type = 'none';
+      minutesParsedExpr.type = 'everyX';
+      minutesParsedExpr.value = 1;
+      minutesParsedExpr.start = parseInt(minuteParts[0]);
+      minutesParsedExpr.end = parseInt(minuteParts[1]);
+      hoursParsedExpr.type = 'specific';
+      hoursParsedExpr.value = [parseInt(hourExpression)];
+
       description += StringUtilities.format(
         this.i18n.everyMinuteBetweenX0AndX1(),
         this.formatTime(hourExpression, minuteParts[0], ""),
@@ -147,8 +213,15 @@ export class ExpressionDescriptor {
       let hourParts: string[] = hourExpression.split(",");
       description += this.i18n.at();
 
+      secondsParsedExpr.type = 'none';
+      minutesParsedExpr.type = 'specific';
+      minutesParsedExpr.value = [parseInt(minuteExpression)];
+      hoursParsedExpr.type = 'specific';
+      hoursParsedExpr.value = [];
+
       for (let i = 0; i < hourParts.length; i++) {
         description += " ";
+        hoursParsedExpr.value.push(parseInt(hourParts[i]));
         description += this.formatTime(hourParts[i], minuteExpression, "");
 
         if (i < hourParts.length - 2) {
@@ -161,9 +234,9 @@ export class ExpressionDescriptor {
       }
     } else {
       //default time description
-      let secondsDescription = this.getSecondsDescription();
-      let minutesDescription = this.getMinutesDescription();
-      let hoursDescription = this.getHoursDescription();
+      let secondsDescription = this.getSecondsDescription(secondsParsedExpr);
+      let minutesDescription = this.getMinutesDescription(minutesParsedExpr);
+      let hoursDescription = this.getHoursDescription(hoursParsedExpr);
 
       description += secondsDescription;
 
@@ -183,7 +256,7 @@ export class ExpressionDescriptor {
     return description;
   }
 
-  protected getSecondsDescription() {
+  protected getSecondsDescription(parsedExpr: any) {
     let description: string = this.getSegmentDescription(
       this.expressionParts[0],
       this.i18n.everySecond(),
@@ -200,15 +273,16 @@ export class ExpressionDescriptor {
         return s == "0"
           ? ""
           : parseInt(s) < 20
-          ? this.i18n.atX0SecondsPastTheMinute()
-          : this.i18n.atX0SecondsPastTheMinuteGt20() || this.i18n.atX0SecondsPastTheMinute();
-      }
+            ? this.i18n.atX0SecondsPastTheMinute()
+            : this.i18n.atX0SecondsPastTheMinuteGt20() || this.i18n.atX0SecondsPastTheMinute();
+      },
+      parsedExpr
     );
 
     return description;
   }
 
-  protected getMinutesDescription() {
+  protected getMinutesDescription(parsedExpr: any) {
     const secondsExpression = this.expressionParts[0];
     const hourExpression = this.expressionParts[2];
     let description: string = this.getSegmentDescription(
@@ -228,18 +302,19 @@ export class ExpressionDescriptor {
           return s == "0" && hourExpression.indexOf("/") == -1 && secondsExpression == ""
             ? this.i18n.everyHour()
             : parseInt(s) < 20
-            ? this.i18n.atX0MinutesPastTheHour()
-            : this.i18n.atX0MinutesPastTheHourGt20() || this.i18n.atX0MinutesPastTheHour();
+              ? this.i18n.atX0MinutesPastTheHour()
+              : this.i18n.atX0MinutesPastTheHourGt20() || this.i18n.atX0MinutesPastTheHour();
         } catch (e) {
           return this.i18n.atX0MinutesPastTheHour();
         }
-      }
+      },
+      parsedExpr
     );
 
     return description;
   }
 
-  protected getHoursDescription() {
+  protected getHoursDescription(parsedExpr: any) {
     let expression = this.expressionParts[2];
     let description: string = this.getSegmentDescription(
       expression,
@@ -255,13 +330,15 @@ export class ExpressionDescriptor {
       },
       s => {
         return this.i18n.atX0();
-      }
+      },
+      parsedExpr
     );
 
     return description;
   }
 
   protected getDayOfWeekDescription() {
+    const parsedExpr: any = this.parsedExpression["dayOfWeek"] = {};
     var daysOfWeekNames = this.i18n.daysOfTheWeek();
 
     let description: string = null;
@@ -269,6 +346,7 @@ export class ExpressionDescriptor {
       // DOW is specified as * so we will not generate a description and defer to DOM part.
       // Otherwise, we could get a contradiction like "on day 1 of the month, every day"
       // or a dupe description like "every day, every day".
+      parsedExpr.type = "every";
       description = "";
     } else {
       description = this.getSegmentDescription(
@@ -276,10 +354,15 @@ export class ExpressionDescriptor {
         this.i18n.commaEveryDay(),
         s => {
           let exp: string = s;
+
           if (s.indexOf("#") > -1) {
+            parsedExpr.type = 'xthY';
             exp = s.substr(0, s.indexOf("#"));
+            parsedExpr.value = parseInt(exp);
           } else if (s.indexOf("L") > -1) {
+            parsedExpr.type = 'lastDayOfWeek';
             exp = exp.replace("L", "");
+            parsedExpr.value = parseInt(exp);
           }
 
           return daysOfWeekNames[parseInt(exp)];
@@ -298,7 +381,7 @@ export class ExpressionDescriptor {
         s => {
           let format: string = null;
           if (s.indexOf("#") > -1) {
-            let dayOfWeekOfMonthNumber: string = s.substring(s.indexOf("#") + 1);
+            let dayOfWeekOfMonthNumber: string = parsedExpr.xth = s.substring(s.indexOf("#") + 1);
             let dayOfWeekOfMonthDescription: string = null;
             switch (dayOfWeekOfMonthNumber) {
               case "1":
@@ -328,7 +411,8 @@ export class ExpressionDescriptor {
           }
 
           return format;
-        }
+        },
+        parsedExpr
       );
     }
 
@@ -336,6 +420,7 @@ export class ExpressionDescriptor {
   }
 
   protected getMonthDescription() {
+    const parsedExpr: any = this.parsedExpression["month"] = {};
     var monthNames = this.i18n.monthsOfTheYear();
 
     let description: string = this.getSegmentDescription(
@@ -358,28 +443,33 @@ export class ExpressionDescriptor {
       },
       s => {
         return this.i18n.commaOnlyInX0();
-      }
+      },
+      parsedExpr
     );
 
     return description;
   }
 
   protected getDayOfMonthDescription(): string {
+    const parsedExpr: any = this.parsedExpression["dayOfMonth"] = {};
     let description: string = null;
     let expression: string = this.expressionParts[3];
 
     switch (expression) {
       case "L":
+        parsedExpr.type = "lastDay";
         description = this.i18n.commaOnTheLastDayOfTheMonth();
         break;
       case "WL":
       case "LW":
+        parsedExpr.type = "lastWeekDay";
         description = this.i18n.commaOnTheLastWeekdayOfTheMonth();
         break;
       default:
         let weekDayNumberMatches = expression.match(/(\d{1,2}W)|(W\d{1,2})/); // i.e. 3W or W2
         if (weekDayNumberMatches) {
-          let dayNumber: number = parseInt(weekDayNumberMatches[0].replace("W", ""));
+          parsedExpr.type = "nearestWeekDay";
+          let dayNumber: number = parsedExpr.start = parseInt(weekDayNumberMatches[0].replace("W", ""));
           let dayString: string =
             dayNumber == 1
               ? this.i18n.firstWeekday()
@@ -391,11 +481,13 @@ export class ExpressionDescriptor {
           // Handle "last day offset" (i.e. L-5:  "5 days before the last day of the month")
           let lastDayOffSetMatches = expression.match(/L-(\d{1,2})/);
           if (lastDayOffSetMatches) {
-            let offSetDays = lastDayOffSetMatches[1];
+            parsedExpr.type = "beforeLastDay";
+            let offSetDays = parsedExpr.value = lastDayOffSetMatches[1];
             description = StringUtilities.format(this.i18n.commaDaysBeforeTheLastDayOfTheMonth(), offSetDays);
             break;
-          } else if (expression == "*" && this.expressionParts[5] != "*"){
+          } else if (expression == "*" && this.expressionParts[5] != "*") {
             // * dayOfMonth and dayOfWeek specified so use dayOfWeek verbiage instead
+            parsedExpr.type = "every";
             return "";
           } else {
             description = this.getSegmentDescription(
@@ -412,7 +504,8 @@ export class ExpressionDescriptor {
               },
               s => {
                 return this.i18n.commaOnDayX0OfTheMonth();
-              }
+              },
+              parsedExpr
             );
           }
           break;
@@ -423,6 +516,7 @@ export class ExpressionDescriptor {
   }
 
   protected getYearDescription() {
+    const parsedExpr: any = this.parsedExpression["year"] = {};
     let description: string = this.getSegmentDescription(
       this.expressionParts[6],
       "",
@@ -437,7 +531,8 @@ export class ExpressionDescriptor {
       },
       s => {
         return this.i18n.commaOnlyInX0();
-      }
+      },
+      parsedExpr
     );
 
     return description;
@@ -449,18 +544,30 @@ export class ExpressionDescriptor {
     getSingleItemDescription: (t: string) => string,
     getIntervalDescriptionFormat: (t: string) => string,
     getBetweenDescriptionFormat: (t: string) => string,
-    getDescriptionFormat: (t: string) => string
+    getDescriptionFormat: (t: string) => string,
+    parsedExpression: any
   ): string {
     let description: string = null;
+    let parsedExpr: any = parsedExpression || {};
 
     if (!expression) {
       description = "";
+      parsedExpr.type = "none";
     } else if (expression === "*") {
+      parsedExpr.type = "every";
+
       description = allDescription;
     } else if (!StringUtilities.containsAny(expression, ["/", "-", ","])) {
+      parsedExpr.type = "specific";
+      parsedExpr.value = [parseInt(expression)];
+
       description = StringUtilities.format(getDescriptionFormat(expression), getSingleItemDescription(expression));
     } else if (expression.indexOf("/") > -1) {
       let segments: string[] = expression.split("/");
+
+      parsedExpr.type = "everyX";
+      parsedExpr.value = parseInt(segments[1]);
+      parsedExpr.start = parseInt(segments[0] == "*" ? "0" : segments[0]);
       description = StringUtilities.format(
         getIntervalDescriptionFormat(segments[1]),
         getSingleItemDescription(segments[1])
@@ -471,7 +578,8 @@ export class ExpressionDescriptor {
         let betweenSegmentDescription: string = this.generateBetweenSegmentDescription(
           segments[0],
           getBetweenDescriptionFormat,
-          getSingleItemDescription
+          getSingleItemDescription,
+          parsedExpr
         );
 
         if (betweenSegmentDescription.indexOf(", ") != 0) {
@@ -492,6 +600,9 @@ export class ExpressionDescriptor {
     } else if (expression.indexOf(",") > -1) {
       let segments: string[] = expression.split(",");
 
+      parsedExpr.type = "specific";
+      parsedExpr.value = [];
+
       let descriptionContent: string = "";
       for (let i = 0; i < segments.length; i++) {
         if (i > 0 && segments.length > 2) {
@@ -507,12 +618,15 @@ export class ExpressionDescriptor {
         }
 
         if (segments[i].indexOf("-") > -1) {
+          const segmentParsedExpr = {};
+          parsedExpr.value.push(segmentParsedExpr);
           let betweenSegmentDescription: string = this.generateBetweenSegmentDescription(
             segments[i],
             s => {
               return this.i18n.commaX0ThroughX1();
             },
-            getSingleItemDescription
+            getSingleItemDescription,
+            segmentParsedExpr
           );
 
           //remove any leading comma
@@ -520,17 +634,26 @@ export class ExpressionDescriptor {
 
           descriptionContent += betweenSegmentDescription;
         } else {
+          parsedExpr.value.push(parseInt(segments[i]));
           descriptionContent += getSingleItemDescription(segments[i]);
         }
       }
 
       description = StringUtilities.format(getDescriptionFormat(expression), descriptionContent);
     } else if (expression.indexOf("-") > -1) {
+      parsedExpr.type = "between";
       description = this.generateBetweenSegmentDescription(
         expression,
         getBetweenDescriptionFormat,
-        getSingleItemDescription
+        getSingleItemDescription,
+        parsedExpr
       );
+      if (parsedExpr.start == parsedExpr.end) {
+        parsedExpr.type = 'specific';
+        parsedExpr.value = [parsedExpr.start];
+        delete parsedExpr.start;
+        delete parsedExpr.end;
+      }
     }
 
     return description;
@@ -539,12 +662,16 @@ export class ExpressionDescriptor {
   protected generateBetweenSegmentDescription(
     betweenExpression: string,
     getBetweenDescriptionFormat: (t: string) => string,
-    getSingleItemDescription: (t: string) => string
+    getSingleItemDescription: (t: string) => string,
+    parsedExpression: any
   ): string {
     let description: string = "";
+    let parsedExpr: any = parsedExpression || {};
     let betweenSegments: string[] = betweenExpression.split("-");
     let betweenSegment1Description: string = getSingleItemDescription(betweenSegments[0]);
+    parsedExpr.start = parseInt(betweenSegments[0]);
     let betweenSegment2Description: string = getSingleItemDescription(betweenSegments[1]);
+    parsedExpr.end = parseInt(betweenSegments[1]);
     betweenSegment2Description = betweenSegment2Description.replace(":00", ":59");
     let betweenDescriptionFormat = getBetweenDescriptionFormat(betweenExpression);
     description += StringUtilities.format(

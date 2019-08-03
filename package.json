@@ -63,5 +63,8 @@
     "prerelease": "rm -rf ./dist && npx webpack && npx jbash ./scripts/generate-docs.js && git add -A",
     "release": "npx npm-github-release"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "publishConfig": {
+    "registry": "https://nexus.dudes.local/repository/npm-forks/"
+  }
 }
