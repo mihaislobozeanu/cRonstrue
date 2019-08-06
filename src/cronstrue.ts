@@ -6,4 +6,5 @@ export default ExpressionDescriptor;
 
 let toString = ExpressionDescriptor.toString;
 let parse = ExpressionDescriptor.parse;
-export { toString, parse };
+let stringify = ExpressionDescriptor.stringify;
+export { toString, parse, stringify };

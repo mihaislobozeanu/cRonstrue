@@ -2,14 +2,14 @@ import chai = require("chai");
 import construe from "../src/cronstrue";
 let assert = chai.assert;
 
-describe.only("Cronstrue parse", function () {
+describe("Cronstrue parse", function () {
   describe("every", function () {
     it("* * * * * *", function () {
       assert.equal(construe.parse(this.test.title).description, "Every second");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "every" }, minutes: { type: "every" }, hours: { type: "every" }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "every" }, minutes: { type: "every" }, hours: { type: "every" }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -17,8 +17,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "Every minute");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "every" }, hours: { type: "every" }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "every" }, hours: { type: "every" }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -26,8 +26,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "Every minute");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "every" }, hours: { type: "every" }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "every" }, hours: { type: "every" }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -35,8 +35,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "Every 5 minutes");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "everyX", value: 5, start: 0 }, hours: { type: "every" }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "everyX", value: 5, start: 0 }, hours: { type: "every" }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -44,8 +44,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "Every minute");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "every" }, hours: { type: "every" }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "every" }, hours: { type: "every" }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -53,8 +53,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "Every hour");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "specific", value: [0] }, hours: { type: "every" }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "specific", value: [0] }, hours: { type: "every" }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -62,8 +62,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "At 12:00 AM");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "specific", value: [0] }, hours: { type: "specific", value: [0] }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "specific", value: [0] }, hours: { type: "specific", value: [0] }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -71,8 +71,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "Every hour");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "specific", value: [0] }, hours: { type: "every" }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "specific", value: [0] }, hours: { type: "every" }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -80,8 +80,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "Every minute, only in March");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "every" }, hours: { type: "every" }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "specific", value: [3] }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "every" }, hours: { type: "every" }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "specific", value: [3] }, years: { type: "none" }
         });
     });
 
@@ -89,8 +89,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "Every minute, only in March and June");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "every" }, hours: { type: "every" }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "specific", value: [3, 6] }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "every" }, hours: { type: "every" }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "specific", value: [3, 6] }, years: { type: "none" }
         });
     });
 
@@ -98,8 +98,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "Every second, only in 2013");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "every" }, minutes: { type: "every" }, hours: { type: "every" }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "specific", value: [2013] }
+          seconds: { type: "every" }, minutes: { type: "every" }, hours: { type: "every" }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "specific", value: [2013] }
         });
     });
 
@@ -107,8 +107,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "Every minute, only in 2013");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "every" }, hours: { type: "every" }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "specific", value: [2013] }
+          seconds: { type: "none" }, minutes: { type: "every" }, hours: { type: "every" }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "specific", value: [2013] }
         });
     });
 
@@ -116,8 +116,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "Every minute, only in 2013 and 2014");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "every" }, hours: { type: "every" }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "specific", value: [2013, 2014] }
+          seconds: { type: "none" }, minutes: { type: "every" }, hours: { type: "every" }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "specific", value: [2013, 2014] }
         });
     });
   });
@@ -127,8 +127,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "Every 45 seconds");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "everyX", value: 45, start: 0 }, minutes: { type: "every" }, hours: { type: "every" }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "everyX", value: 45, start: 0 }, minutes: { type: "every" }, hours: { type: "every" }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -136,8 +136,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "Every 5 minutes");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "everyX", value: 5, start: 0 }, hours: { type: "every" }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "everyX", value: 5, start: 0 }, hours: { type: "every" }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -145,8 +145,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "Every 10 minutes");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "everyX", value: 10, start: 0 }, hours: { type: "every" }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "everyX", value: 10, start: 0 }, hours: { type: "every" }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -154,8 +154,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "Every 5 minutes");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "everyX", value: 5, start: 0 }, hours: { type: "every" }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "everyX", value: 5, start: 0 }, hours: { type: "every" }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -163,8 +163,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "Every hour, between 09:00 AM and 05:59 PM");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "specific", value: [0] }, hours: { type: "between", start: 9, end: 17 }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "specific", value: [0] }, hours: { type: "between", start: 9, end: 17 }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -172,8 +172,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "Every minute, February through December");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "every" }, hours: { type: "every" }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "everyX", value: 1, start: 2, end: 12 }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "every" }, hours: { type: "every" }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "everyX", value: 1, start: 2, end: 12 }, years: { type: "none" }
         });
     });
 
@@ -181,8 +181,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "Every hour, Tuesday through Saturday");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "specific", value: [0] }, hours: { type: "every" }, dayOfWeek: { type: "everyX", value: 1, start: 2, end: 6 },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "specific", value: [0] }, hours: { type: "every" }, daysOfWeek: { type: "everyX", value: 1, start: 2, end: 6 },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -190,8 +190,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "At 01:52 PM, Wednesday through Saturday");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "specific", value: [52] }, hours: { type: "specific", value: [13] }, dayOfWeek: { type: "everyX", value: 1, start: 3, end: 6 },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "specific", value: [52] }, hours: { type: "specific", value: [13] }, daysOfWeek: { type: "everyX", value: 1, start: 3, end: 6 },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
   });
@@ -201,8 +201,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "At 11:00 PM, Monday through Friday");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "specific", value: [0] }, hours: { type: "specific", value: [23] }, dayOfWeek: { type: "between", start: 1, end: 5 },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "specific", value: [0] }, hours: { type: "specific", value: [23] }, daysOfWeek: { type: "between", start: 1, end: 5 },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -210,8 +210,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "At 11:30 AM, Monday through Friday");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "specific", value: [30] }, hours: { type: "specific", value: [11] }, dayOfWeek: { type: "between", start: 1, end: 5 },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "specific", value: [30] }, hours: { type: "specific", value: [11] }, daysOfWeek: { type: "between", start: 1, end: 5 },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -219,8 +219,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "Every minute between 11:00 AM and 11:10 AM");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "everyX", value: 1, start: 0, end: 10 }, hours: { type: "specific", value: [11] }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "everyX", value: 1, start: 0, end: 10 }, hours: { type: "specific", value: [11] }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -228,8 +228,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "At 12:23 PM, January through March");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "specific", value: [23] }, hours: { type: "specific", value: [12] }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "between", start: 1, end: 3 }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "specific", value: [23] }, hours: { type: "specific", value: [12] }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "between", start: 1, end: 3 }, years: { type: "none" }
         });
     });
 
@@ -237,8 +237,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "At 12:23 PM, January through February");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "specific", value: [23] }, hours: { type: "specific", value: [12] }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "between", start: 1, end: 2 }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "specific", value: [23] }, hours: { type: "specific", value: [12] }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "between", start: 1, end: 2 }, years: { type: "none" }
         });
     });
 
@@ -246,8 +246,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "At 1 minutes past the hour, at 01:00 AM and 03:00 AM through 04:59 AM");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "specific", value: [1] }, hours: { type: "specific", value: [1, { start: 3, end: 4 }] }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "specific", value: [1] }, hours: { type: "specific", value: [1, { start: 3, end: 4 }] }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -255,8 +255,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "Every second, at 0 minutes past the hour, every 4 hours");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "every" }, minutes: { type: "specific", value: [0] }, hours: { type: "everyX", value: 4, start: 0 }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "every" }, minutes: { type: "specific", value: [0] }, hours: { type: "everyX", value: 4, start: 0 }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -264,8 +264,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "Every 10 seconds, at 0 minutes past the hour");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "everyX", value: 10, start: 0 }, minutes: { type: "specific", value: [0] }, hours: { type: "every" }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "everyX", value: 10, start: 0 }, minutes: { type: "specific", value: [0] }, hours: { type: "every" }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -273,8 +273,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "Every second, at 0 minutes past the hour, between 12:00 AM and 12:59 AM");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "every" }, minutes: { type: "specific", value: [0] }, hours: { type: "specific", value: [0] }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "every" }, minutes: { type: "specific", value: [0] }, hours: { type: "specific", value: [0] }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -282,8 +282,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "Every minute, between 12:00 AM and 12:59 AM");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "every" }, hours: { type: "specific", value: [0] }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "every" }, hours: { type: "specific", value: [0] }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -291,8 +291,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "Every second, at 0 minutes past the hour");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "every" }, minutes: { type: "specific", value: [0] }, hours: { type: "every" }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "every" }, minutes: { type: "specific", value: [0] }, hours: { type: "every" }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
   });
@@ -302,8 +302,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "At 11:30 AM");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "specific", value: [30] }, hours: { type: "specific", value: [11] }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "specific", value: [30] }, hours: { type: "specific", value: [11] }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -311,8 +311,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "At 12:23 PM, only on Sunday");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "specific", value: [23] }, hours: { type: "specific", value: [12] }, dayOfWeek: { type: "specific", value: [0] },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "specific", value: [23] }, hours: { type: "specific", value: [12] }, daysOfWeek: { type: "specific", value: [0] },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -320,8 +320,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "At 02:02:30 PM");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "specific", value: [30] }, minutes: { type: "specific", value: [2] }, hours: { type: "specific", value: [14] }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "specific", value: [30] }, minutes: { type: "specific", value: [2] }, hours: { type: "specific", value: [14] }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -329,8 +329,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "At 06:00 AM");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "specific", value: [0] }, hours: { type: "specific", value: [6] }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "specific", value: [0] }, hours: { type: "specific", value: [6] }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -338,8 +338,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "At 5 minutes past the hour");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "specific", value: [5] }, hours: { type: "every" }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "specific", value: [5] }, hours: { type: "every" }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -347,8 +347,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "At 09:46 AM, only on Monday");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "specific", value: [46] }, hours: { type: "specific", value: [9] }, dayOfWeek: { type: "specific", value: [1] },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "specific", value: [46] }, hours: { type: "specific", value: [9] }, daysOfWeek: { type: "specific", value: [1] },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -356,8 +356,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "At 09:46 AM, only on Sunday");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "specific", value: [46] }, hours: { type: "specific", value: [9] }, dayOfWeek: { type: "specific", value: [0] },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "specific", value: [46] }, hours: { type: "specific", value: [9] }, daysOfWeek: { type: "specific", value: [0] },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -365,8 +365,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "At 12:23 PM, on day 15 of the month");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "specific", value: [23] }, hours: { type: "specific", value: [12] }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "specific", value: [15] }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "specific", value: [23] }, hours: { type: "specific", value: [12] }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "specific", value: [15] }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -374,8 +374,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "At 12:23 PM, only in January");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "specific", value: [23] }, hours: { type: "specific", value: [12] }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "specific", value: [1] }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "specific", value: [23] }, hours: { type: "specific", value: [12] }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "specific", value: [1] }, years: { type: "none" }
         });
     });
 
@@ -383,8 +383,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "At 12:23 PM, only in January");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "specific", value: [23] }, hours: { type: "specific", value: [12] }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "specific", value: [1] }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "specific", value: [23] }, hours: { type: "specific", value: [12] }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "specific", value: [1] }, years: { type: "none" }
         });
     });
 
@@ -392,8 +392,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "At 07:00 AM");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "specific", value: [0] }, hours: { type: "specific", value: [7] }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "specific", value: [0] }, hours: { type: "specific", value: [7] }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -401,8 +401,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "At 02:30 PM and 04:30 PM");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "specific", value: [30] }, hours: { type: "specific", value: [14, 16] }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "specific", value: [30] }, hours: { type: "specific", value: [14, 16] }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -410,8 +410,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "At 06:30 AM, 02:30 PM and 04:30 PM");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "specific", value: [30] }, hours: { type: "specific", value: [6, 14, 16] }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "specific", value: [30] }, hours: { type: "specific", value: [6, 14, 16] }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -419,8 +419,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "Every hour, on day 31 of the month, and on Monday");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "specific", value: [0] }, hours: { type: "every" }, dayOfWeek: { type: "specific", value: [1] },
-          dayOfMonth: { type: "specific", value: [31] }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "specific", value: [0] }, hours: { type: "every" }, daysOfWeek: { type: "specific", value: [1] },
+          daysOfMonth: { type: "specific", value: [31] }, months: { type: "every" }, years: { type: "none" }
         });
     });
   });
@@ -430,8 +430,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "Every minute, on the last weekday of the month");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "every" }, hours: { type: "every" }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "lastWeekDay" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "every" }, hours: { type: "every" }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "lastWeekDay" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -439,8 +439,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "Every minute, on the last weekday of the month");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "every" }, hours: { type: "every" }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "lastWeekDay" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "every" }, hours: { type: "every" }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "lastWeekDay" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -448,8 +448,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "Every minute, on the first weekday of the month");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "every" }, hours: { type: "every" }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "nearestWeekDay", start: 1 }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "every" }, hours: { type: "every" }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "nearestWeekDay", start: 1 }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -457,8 +457,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "Every minute, on the weekday nearest day 13 of the month");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "every" }, hours: { type: "every" }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "nearestWeekDay", start: 13 }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "every" }, hours: { type: "every" }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "nearestWeekDay", start: 13 }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -466,8 +466,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "Every minute, on the first weekday of the month");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "every" }, hours: { type: "every" }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "nearestWeekDay", start: 1 }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "every" }, hours: { type: "every" }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "nearestWeekDay", start: 1 }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -475,8 +475,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "Every minute, on the weekday nearest day 5 of the month");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "every" }, hours: { type: "every" }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "nearestWeekDay", start: 5 }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "every" }, hours: { type: "every" }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "nearestWeekDay", start: 5 }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -484,8 +484,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "Every minute, on the weekday nearest day 5 of the month");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "every" }, hours: { type: "every" }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "nearestWeekDay", start: 5 }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "every" }, hours: { type: "every" }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "nearestWeekDay", start: 5 }, months: { type: "every" }, years: { type: "none" }
         });
     });
   });
@@ -495,8 +495,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "Every minute, on the last Thursday of the month");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "every" }, hours: { type: "every" }, dayOfWeek: { type: "lastDayOfWeek", value: 4 },
-          dayOfMonth: { type: "every" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "every" }, hours: { type: "every" }, daysOfWeek: { type: "lastDayOfWeek", value: 4 },
+          daysOfMonth: { type: "every" }, months: { type: "every" }, years: { type: "none" }
         });
     });
 
@@ -504,8 +504,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "Every 5 minutes, on the last day of the month, only in January");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "everyX", value: 5, start: 0 }, hours: { type: "every" }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "lastDay" }, month: { type: "specific", value: [1] }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "everyX", value: 5, start: 0 }, hours: { type: "every" }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "lastDay" }, months: { type: "specific", value: [1] }, years: { type: "none" }
         });
     });
 
@@ -513,8 +513,8 @@ describe.only("Cronstrue parse", function () {
       assert.equal(construe.parse(this.test.title).description, "At 08:00 PM, on the last day of the month");
       assert.deepEqual(construe.parse(this.test.title).parsed,
         {
-          seconds: { type: "none" }, minutes: { type: "specific", value: [0] }, hours: { type: "specific", value: [20] }, dayOfWeek: { type: "every" },
-          dayOfMonth: { type: "lastDay" }, month: { type: "every" }, year: { type: "none" }
+          seconds: { type: "none" }, minutes: { type: "specific", value: [0] }, hours: { type: "specific", value: [20] }, daysOfWeek: { type: "every" },
+          daysOfMonth: { type: "lastDay" }, months: { type: "every" }, years: { type: "none" }
         });
     });
   });

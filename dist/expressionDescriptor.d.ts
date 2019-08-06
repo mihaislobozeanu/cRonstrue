@@ -16,6 +16,8 @@ export declare class ExpressionDescriptor {
         description: string;
         parsed: any;
     };
+    private static stringifyField;
+    static stringify(parsed: any): string;
     static initialize(localesLoader: LocaleLoader): void;
     constructor(expression: string, options: Options);
     protected getFullDescription(): string;

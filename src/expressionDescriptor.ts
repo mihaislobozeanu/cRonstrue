@@ -5,6 +5,8 @@ import { Options } from "./options";
 import { Locale } from "./i18n/locale";
 import { LocaleLoader } from "./i18n/localeLoader";
 
+const toStr = Object.prototype.toString;
+
 export class ExpressionDescriptor {
   static locales: { [name: string]: Locale } = {};
   static specialCharacters: string[];
@@ -92,6 +94,59 @@ export class ExpressionDescriptor {
     let descripter = new ExpressionDescriptor(expression, options);
     let description = descripter.getFullDescription();
     return { description, parsed: descripter.parsedExpression };
+  }
+
+  private static stringifyField(field: any): string {
+    switch (field.type) {
+      case 'every':
+        return '*';
+      case 'everyX':
+        if (field.end) {
+          return `${field.start}-${field.end}/${field.value}`;
+        }
+        return `${field.start}/${field.value}`;
+      case 'specific':
+        return field.value.map((value: any) => {
+          if (toStr.call(value) === '[object Object]') {
+            return `${value.start}-${value.end}`;
+          }
+          return value;
+        }).join(',');
+      case 'between':
+        return `${field.start}-${field.end}`;
+      case 'xthY':
+        return `${field.value}#${field.xth}`;
+      case 'lastDayOfWeek':
+        return `${field.value}L`;
+      case 'lastDay':
+        return 'L';
+      case 'lastWeekDay':
+        return 'LW';
+      case 'nearestWeekDay':
+        return `${field.start}W`;
+      case 'beforeLastDay':
+        return `L-${field.value}`;
+    }
+    return '?';
+  }
+
+  static stringify(parsed: any): string {
+    let expression = '', separator = '';
+    if (parsed.seconds.type != 'none') {
+      expression += separator + ExpressionDescriptor.stringifyField(parsed.seconds);
+      separator = ' ';
+    }
+    expression += separator + ExpressionDescriptor.stringifyField(parsed.minutes);
+    separator = ' ';
+    expression += separator + ExpressionDescriptor.stringifyField(parsed.hours);
+    expression += separator + ExpressionDescriptor.stringifyField(parsed.daysOfMonth);
+    expression += separator + ExpressionDescriptor.stringifyField(parsed.months);
+    expression += separator + ExpressionDescriptor.stringifyField(parsed.daysOfWeek);
+    if (parsed.years.type != 'none') {
+      expression += separator + ExpressionDescriptor.stringifyField(parsed.years);
+    }
+
+    return expression;
   }
 
 
@@ -338,7 +393,7 @@ export class ExpressionDescriptor {
   }
 
   protected getDayOfWeekDescription() {
-    const parsedExpr: any = this.parsedExpression["dayOfWeek"] = {};
+    const parsedExpr: any = this.parsedExpression["daysOfWeek"] = {};
     var daysOfWeekNames = this.i18n.daysOfTheWeek();
 
     let description: string = null;
@@ -420,7 +475,7 @@ export class ExpressionDescriptor {
   }
 
   protected getMonthDescription() {
-    const parsedExpr: any = this.parsedExpression["month"] = {};
+    const parsedExpr: any = this.parsedExpression["months"] = {};
     var monthNames = this.i18n.monthsOfTheYear();
 
     let description: string = this.getSegmentDescription(
@@ -451,7 +506,7 @@ export class ExpressionDescriptor {
   }
 
   protected getDayOfMonthDescription(): string {
-    const parsedExpr: any = this.parsedExpression["dayOfMonth"] = {};
+    const parsedExpr: any = this.parsedExpression["daysOfMonth"] = {};
     let description: string = null;
     let expression: string = this.expressionParts[3];
 
@@ -516,7 +571,7 @@ export class ExpressionDescriptor {
   }
 
   protected getYearDescription() {
-    const parsedExpr: any = this.parsedExpression["year"] = {};
+    const parsedExpr: any = this.parsedExpression["years"] = {};
     let description: string = this.getSegmentDescription(
       this.expressionParts[6],
       "",
